@@ -3,7 +3,7 @@ import csv
 import pytest
 
 from models.providers import UserProvider, CsvUserProvider, DatabaseUserProvider, ApiUserProvider
-from models.users import User, USER_ADULT_AGE, Status, Worker
+from models.users import User, USER_ADULT_AGE, Status, W
 
 
 # -------------------------------------------------------------------

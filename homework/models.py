@@ -1,4 +1,4 @@
-class Product:
+class Product: #описание класса, свойства
     """
     Класс продукта
     """
@@ -7,7 +7,7 @@ class Product:
     description: str
     quantity: int
 
-    def __init__(self, name, price, description, quantity):
+    def __init__(self, name, price, description, quantity): #создание экземпляра
         self.name = name
         self.price = price
         self.description = description
@@ -49,14 +49,17 @@ class Cart:
 
     def __init__(self):
         # По-умолчанию корзина пустая
-        self.products = {}
+        self.products = {}  # Словарь {Продукт: Количество}
 
     def add_product(self, product: Product, buy_count=1):
         """
         Метод добавления продукта в корзину.
         Если продукт уже есть в корзине, то увеличиваем количество
         """
-        raise NotImplementedError
+        if product in self.products:
+            self.products[product] += buy_count
+        else:
+            self.products[product] = buy_count
 
     def remove_product(self, product: Product, remove_count=None):
         """
@@ -64,13 +67,17 @@ class Cart:
         Если remove_count не передан, то удаляется вся позиция
         Если remove_count больше, чем количество продуктов в позиции, то удаляется вся позиция
         """
-        raise NotImplementedError
+        if product in self.products:
+            if remove_count is None or remove_count >= self.products[product]:
+                del self.products[product]  # Полностью удалить продукт
+            else:
+                self.products[product] -= remove_count  # Уменьшить количество
 
     def clear(self):
-        raise NotImplementedError
+        self.products.clear()
 
     def get_total_price(self) -> float:
-        raise NotImplementedError
+        return sum(product.price * quantity for product, quantity in self.products.items())
 
     def buy(self):
         """
@@ -78,4 +85,9 @@ class Cart:
         Учтите, что товаров может не хватать на складе.
         В этом случае нужно выбросить исключение ValueError
         """
-        raise NotImplementedError
+        for product, quantity in self.products.items():
+            if not product.check_quantity(quantity):
+                raise ValueError(
+                    f"Товара '{product.name}' недостаточно на складе! Запрашиваемое: {quantity}, доступно: {product.quantity}."
+                )
+

@@ -90,4 +90,10 @@ class Cart:
                 raise ValueError(
                     f"Товара '{product.name}' недостаточно на складе! Запрашиваемое: {quantity}, доступно: {product.quantity}."
                 )
+            # После проверки уменьшаем количество товаров
+        for product, quantity in self.products.items():
+            product.quantity -= quantity  # Вычитаем купленное количество
+
+            # Очищаем корзину после успешной покупки
+        self.products.clear()
 

@@ -19,26 +19,33 @@ class TestProducts:
 
     def test_product_check_quantity(self, product):
         # TODO напишите проверки на метод check_quantity
-        def test_product_check_quantity(self, product):
-            """Тестируем метод check_quantity"""
-            # Достаточное количество товаров
-            assert product.check_quantity(1) is True
-            assert product.check_quantity(500) is True
-            assert product.check_quantity(1000) is True
+        # Проверяем, что можно купить, если количество в наличии
+        assert product.check_quantity(1) is True
+        assert product.check_quantity(500) is True
+        assert product.check_quantity(1000) is True
 
-            # Недостаточное количество товаров
-            assert product.check_quantity(1001) is False
-            assert product.check_quantity(5000) is False
-
+        # Проверяем, что нельзя купить больше, чем есть
+        assert product.check_quantity(1001) is False
+        assert product.check_quantity(5000) is False
+        pass
 
     def test_product_buy(self, product):
         # TODO напишите проверки на метод buy
-        pass
+        # Покупаем 100 товаров - количество должно уменьшиться
+        product.buy(100)
+        assert product.quantity == 900
 
-    def test_product_buy_more_than_available(self, product):
+        # Покупаем оставшиеся 900 - должно стать 0
+        product.buy(900)
+        assert product.quantity == 0
+
+
+    def test_product_buy_more_than_available(self, product, excinfo="Недостаточно товара.*превышает доступное.*"):
         # TODO напишите проверки на метод buy,
         #  которые ожидают ошибку ValueError при попытке купить больше, чем есть в наличии
-        pass
+        """Тест покупки больше, чем есть в наличии (должно вызвать ошибку)"""
+        with pytest.raises(ValueError, match=r"Недостаточно товара.*превышает доступное.*"):
+            product.buy(2000)  # Пытаемся купить 2000, когда есть только 1000
 
 
 class TestCart:
